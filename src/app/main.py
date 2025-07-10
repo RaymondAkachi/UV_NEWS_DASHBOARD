@@ -107,76 +107,76 @@ COUNTRY_CODES = {
 custom_search_output_children = None
 
 client.initialize()
-data = client.get("monthly_summary")
-data = json.loads(data)
-if not data['line_graph']:
-    custom_search_output_children = html.Div(
-        dbc.Alert(
-            f"A server error occured",
-            color="danger",
-            className="mt-3"
-        ),
-        style={'text-align': 'center'}
-    )
+# data = client.get("monthly_summary")
+# data = json.loads(data)
+# if not data['line_graph']:
+#     custom_search_output_children = html.Div(
+#         dbc.Alert(
+#             f"A server error occured",
+#             color="danger",
+#             className="mt-3"
+#         ),
+#         style={'text-align': 'center'}
+#     )
 
 
-# Dummy Data for Line Graph
-line_graph = data['line_graph']
-# timestamps = line_graph.keys()
-timestamps = [datetime.strptime(ts_str, "%Y-%m-%d %H:%M:%S")
-              for ts_str in line_graph.keys()]
-sentiments = list(line_graph.values())
-df_line = pd.DataFrame({
-    "Timestamp": timestamps,
-    "Sentiment Score": sentiments
-})
+# # Dummy Data for Line Graph
+# line_graph = data['line_graph']
+# # timestamps = line_graph.keys()
+# timestamps = [datetime.strptime(ts_str, "%Y-%m-%d %H:%M:%S")
+#               for ts_str in line_graph.keys()]
+# sentiments = list(line_graph.values())
+# df_line = pd.DataFrame({
+#     "Timestamp": timestamps,
+#     "Sentiment Score": sentiments
+# })
 
-# df_line['Timestamp'] = df_line['Timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S')
-# df_line['Timestamp'] = df_line['Timestamp']
+# # df_line['Timestamp'] = df_line['Timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S')
+# # df_line['Timestamp'] = df_line['Timestamp']
 
-df = df_line.sort_values(by="Timestamp")
-fig_line = px.line(df_line, x="Timestamp", y="Sentiment Score", title="Overall Sentiment Trend",
-                   markers=True, line_shape="linear")
-fig_line.update_layout(hovermode="x unified", template="plotly_white",
-                       xaxis_rangeslider_visible=True)
+# df = df_line.sort_values(by="Timestamp")
+# fig_line = px.line(df_line, x="Timestamp", y="Sentiment Score", title="Overall Sentiment Trend",
+#                    markers=True, line_shape="linear")
+# fig_line.update_layout(hovermode="x unified", template="plotly_white",
+#                        xaxis_rangeslider_visible=True)
 
-# Dummy Data for Pie Chart
-pie_chart = data['pie_chart']
-total = 0
-pie_data = [pie_chart['good'], pie_chart['okay'], pie_chart['bad']]
-for i in pie_data:
-    total += i
-pie_data = [x / total * 100 for x in pie_data]
-pie_data = [int(round(x)) for x in pie_data]
-df_pie = pd.DataFrame({
-    "Sentiment": ["Positive", "Neutral", "Negative"],
-    "Count": pie_data
-})
-fig_pie = px.pie(df_pie, names="Sentiment", values="Count", title="Sentiment Distribution",
-                 color_discrete_map={'Positive': '#28a745', 'Neutral': '#ffc107', 'Negative': '#dc3545'})
-fig_pie.update_traces(textposition='inside', textinfo='percent+label')
-fig_pie.update_layout(showlegend=True)
+# # Dummy Data for Pie Chart
+# pie_chart = data['pie_chart']
+# total = 0
+# pie_data = [pie_chart['good'], pie_chart['okay'], pie_chart['bad']]
+# for i in pie_data:
+#     total += i
+# pie_data = [x / total * 100 for x in pie_data]
+# pie_data = [int(round(x)) for x in pie_data]
+# df_pie = pd.DataFrame({
+#     "Sentiment": ["Positive", "Neutral", "Negative"],
+#     "Count": pie_data
+# })
+# fig_pie = px.pie(df_pie, names="Sentiment", values="Count", title="Sentiment Distribution",
+#                  color_discrete_map={'Positive': '#28a745', 'Neutral': '#ffc107', 'Negative': '#dc3545'})
+# fig_pie.update_traces(textposition='inside', textinfo='percent+label')
+# fig_pie.update_layout(showlegend=True)
 
-# Dummy Data for Table
-top_sources = data['top_sources']
-sources = []
-article_counts = []
-avg_sentiments = []
+# # Dummy Data for Table
+# top_sources = data['top_sources']
+# sources = []
+# article_counts = []
+# avg_sentiments = []
 
-for i in top_sources:
-    sources.append(i['source'])
-    article_counts.append(i['article_count'])
-    avg_sentiments.append(i['avg_sentiment'])
+# for i in top_sources:
+#     sources.append(i['source'])
+#     article_counts.append(i['article_count'])
+#     avg_sentiments.append(i['avg_sentiment'])
 
-df_table = pd.DataFrame({
-    "Sources": sources,
-    "Art. Count": article_counts,
-    "Avg. Sentiment": avg_sentiments
-})
+# df_table = pd.DataFrame({
+#     "Sources": sources,
+#     "Art. Count": article_counts,
+#     "Avg. Sentiment": avg_sentiments
+# })
 
 # Dummy News Articles for Scrollable Feed
-news_articles = top_news(
-    "https://news.google.com/rss?hl=en-US&gl=NG&ceid=US:en")
+# news_articles = top_news(
+#     "https://news.google.com/rss?hl=en-US&gl=NG&ceid=US:en")
 # news_articles = [
 #     {"title": "Tech Giant Unveils New AI Processor",
 #         "link": "https://www.verylongexample.com/ai-innovation/tech-giant-unveils-revolutionary-new-artificial-intelligence-processor-details.html"},
@@ -215,8 +215,8 @@ def create_news_item_component(title, link):
     ], style={'padding': '5px 0'})
 
 
-news_elements = [create_news_item_component(
-    article['title'], article['link']) for article in news_articles]
+# news_elements = [create_news_item_component(
+#     article['title'], article['link']) for article in news_articles]
 
 
 # --- 2. Initialize Dash App ---
@@ -225,9 +225,9 @@ app = dash.Dash(__name__, suppress_callback_exceptions=True, external_stylesheet
 # Added dbc.icons.FONT_AWESOME for a potential settings icon on the button
 
 # EXPOSE THE SERVER for Gunicorn
-server = app.server  # This line is essential!
-wsgi_app = app.server
-asgi_app = WsgiToAsgi(wsgi_app)
+# wsgi_app = app.server  # This line is essential!
+# wsgi_app = app.server
+# asgi_app = WsgiToAsgi(wsgi_app)
 
 
 # --- 3. Define Dashboard Layout ---
@@ -236,6 +236,12 @@ app.layout = dbc.Container([
     # Storing needed values in browser session
     dcc.Store(id='last-searched-query-store', data=''),
     dcc.Store(id='search-mode', data='default'),
+
+    dcc.Location(id='url', refresh=False),
+    # dcc.Store(id='redis-data-store', storage_type='memory'),
+    dcc.Interval(id='interval-component', interval=600 *
+                 1000, n_intervals=0),  # 1 hr
+
 
     # Row 1: Dashboard Title
     dbc.Row(
@@ -333,7 +339,8 @@ app.layout = dbc.Container([
             dbc.Card([
                 dbc.CardHeader("Sentiment Trend Over Time", className="h5"),
                 dbc.CardBody(
-                    dcc.Graph(id='sentiment-line-graph', figure=fig_line)
+                    # dcc.Graph(id='sentiment-line-graph', figure=fig_line)
+                    dcc.Graph(id='sentiment-line-graph')
                 )
             ], className="shadow-sm border-0"),
             md=6,
@@ -344,7 +351,8 @@ app.layout = dbc.Container([
                 dbc.CardHeader("Overall Sentiment Distribution",
                                className="h5"),
                 dbc.CardBody(
-                    dcc.Graph(id='sentiment-pie-chart', figure=fig_pie)
+                    # dcc.Graph(id='sentiment-pie-chart', figure=fig_pie)
+                    dcc.Graph(id='sentiment-pie-chart')
                 )
             ], className="shadow-sm border-0"),
             md=6,
@@ -360,9 +368,9 @@ app.layout = dbc.Container([
                 dbc.CardBody(
                     dash_table.DataTable(
                         id='keyword-table',
-                        columns=[{"name": i, "id": i}
-                                 for i in df_table.columns],
-                        data=df_table.to_dict('records'),
+                        # columns=[{"name": i, "id": i}
+                        #          for i in df_table.columns],
+                        # data=df_table.to_dict('records'),
                         style_table={'overflowX': 'auto'},
                         style_header={
                             'backgroundColor': 'white',
@@ -400,7 +408,7 @@ app.layout = dbc.Container([
                 ),
                 dbc.CardBody(
                     html.Div(
-                        news_elements,
+                        # news_elements,
                         id='news-bar',
                         style={
                             'height': '350px',
@@ -437,9 +445,136 @@ def toggle_offcanvas(n_clicks, is_open):
         return not is_open
     return is_open
 
+
+# Callback to fetch data on page load or interval
+
+# Callback to render components
+# Callback to fetch and render components
+@app.callback(
+    [
+        Output('sentiment-line-graph', 'figure', allow_duplicate=True),
+        Output('sentiment-pie-chart', 'figure', allow_duplicate=True),
+        Output('keyword-table', 'columns', allow_duplicate=True),
+        Output('keyword-table', 'data', allow_duplicate=True),
+        Output('news-bar', 'children', allow_duplicate=True),
+        Output('custom-search-output', 'children', allow_duplicate=True)
+    ],
+    [
+        Input('url', 'pathname'),
+        Input('interval-component', 'n_intervals')
+    ],
+    prevent_initial_call=True,
+    running=[(Output("custom-search-output", "children"), html.Div(
+        dbc.Alert(f"Getting the most up-to-data data from our system",
+                  color="success", className="mt-3"),
+        style={'text-align': 'center'}
+    ), html.Div())]
+)
+def render_components(pathname, n):
+    logger.info("entered rendered components callback")
+    # Default outputs
+    default_output = (
+        {'layout': {'title': 'No data available'}},
+        {'layout': {'title': 'No data available'}},
+        [],
+        [],
+        [html.Div("No news available")],
+        html.Div(dbc.Alert("No data available, please try again later.",
+                 color="danger", className="mt-3"), style={'text-align': 'center'})
+    )
+
+    if pathname != '/':
+        return default_output
+
+    data = json.loads(client.get("monthly_summary"))
+    if not data or not data.get('line_graph'):
+        return default_output
+
+    try:
+        logger.info("Successfully retrieved data needed for plotting of graphs")
+        # Line Graph
+        line_graph = data.get('line_graph', {})
+        if not line_graph:
+            return default_output
+        timestamps = [datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+                      for ts in line_graph.keys()]
+        sentiments = list(line_graph.values())
+        df_line = pd.DataFrame({
+            "Timestamp": timestamps,
+            "Sentiment Score": sentiments
+        }).sort_values(by="Timestamp")
+        fig_line = px.line(
+            df_line,
+            x="Timestamp",
+            y="Sentiment Score",
+            title="Overall Sentiment Trend",
+            markers=True,
+            line_shape="linear"
+        )
+        fig_line.update_layout(
+            hovermode="x unified", template="plotly_white", xaxis_rangeslider_visible=True)
+
+        # Pie Chart
+        pie_chart = data.get('pie_chart', {})
+        pie_data = [
+            pie_chart.get('good', 0),
+            pie_chart.get('okay', 0),
+            pie_chart.get('bad', 0)
+        ]
+        total = sum(pie_data) or 1
+        pie_data = [int(round(x / total * 100)) for x in pie_data]
+        df_pie = pd.DataFrame({
+            "Sentiment": ["Positive", "Neutral", "Negative"],
+            "Count": pie_data
+        })
+        fig_pie = px.pie(
+            df_pie,
+            names="Sentiment",
+            values="Count",
+            title="Sentiment Distribution",
+            color_discrete_map={'Positive': '#28a745',
+                                'Neutral': '#ffc107', 'Negative': '#dc3545'}
+        )
+        fig_pie.update_traces(textposition='inside', textinfo='percent+label')
+        fig_pie.update_layout(showlegend=True)
+
+        # Table
+        top_sources = data.get('top_sources', [])
+        df_table = pd.DataFrame([
+            {
+                "Sources": i.get('source', ''),
+                "Art. Count": i.get('article_count', 0),
+                "Avg. Sentiment": i.get('avg_sentiment', 0)
+            } for i in top_sources
+        ])
+        keyword_col = [{"name": i, "id": i} for i in df_table.columns]
+        keyword_data = df_table.to_dict('records')
+
+        # News Bar
+        try:
+            news_articles = top_news(
+                'https://news.google.com/rss?hl=en-US&gl=NG&ceid=US:en')
+            news_children = [create_news_item_component(
+                article['title'], article['link']) for article in news_articles]
+        except Exception as e:
+            print(f"Error fetching news: {e}")
+            news_children = [html.Div("Failed to load news")]
+        logger.info("about to return values")
+        return (
+            fig_line,
+            fig_pie,
+            keyword_col,
+            keyword_data,
+            news_children,
+            html.Div()  # Clear custom-search-output
+        )
+
+    except Exception as e:
+        print(f"Error rendering components: {e}")
+        return default_output
+
+
 # Callback for Custom Search / Default Search buttons
-
-
 @app.callback(
     # To add/remove the input box
     Output("custom-search-input-container", "children"),
@@ -513,7 +648,6 @@ def handle_custom_search_button(n_clicks):
     Output("offcanvas-search-options", "is_open", allow_duplicate=True),
     # Corrected ID and allow_duplicate
     Output("search-mode", "data", allow_duplicate=True),
-    # Allow_duplicate needed if other callbacks also target this
     Output("custom-search-output", "children", allow_duplicate=True),
 
     # Set data charts back to normal
@@ -521,9 +655,6 @@ def handle_custom_search_button(n_clicks):
     Output('sentiment-line-graph', 'figure', allow_duplicate=True),
     Output('sentiment-pie-chart', 'figure', allow_duplicate=True),
     Output('news-bar', 'children', allow_duplicate=True),
-
-    # Output('category-dropdown', 'value', allow_duplicate=True),
-    # Output('time-dropdown', 'value', allow_duplicate=True),
 
     Input("default-search-button", "n_clicks"),
     State('search-mode', 'data'),
@@ -549,13 +680,12 @@ def handle_default_search_button(n_clicks, search_mode):
 
     if search_mode == "custom":
         data = client.get("monthly_summary")
-        print(data, "Hello")
         data = json.loads(data)
 
         if not data['line_graph']:
             custom_search_output_children = html.Div(
                 dbc.Alert(
-                    f"A server error occured",
+                    f"An error occured",
                     color="danger",
                     className="mt-3"
                 ),
@@ -581,12 +711,13 @@ def handle_default_search_button(n_clicks, search_mode):
 
         # Dummy Data for Pie Chart
         pie_chart = data['pie_chart']
-        total = 0
-        pie_data = [pie_chart['good'], pie_chart['okay'], pie_chart['bad']]
-        for i in pie_data:
-            total += i
-        pie_data = [x / total * 100 for x in pie_data]
-        pie_data = [int(round(x)) for x in pie_data]
+        pie_data = [
+            pie_chart.get('good', 0),
+            pie_chart.get('okay', 0),
+            pie_chart.get('bad', 0)
+        ]
+        total = sum(pie_data) or 1  # Avoid division by zero
+        pie_data = [int(round(x / total * 100)) for x in pie_data]
         df_pie = pd.DataFrame({
             "Sentiment": ["Positive", "Neutral", "Negative"],
             "Count": pie_data
@@ -814,6 +945,11 @@ def perform_custom_search(n_clicks, current_search_query, last_searched_query):
     State("search-mode", "data"),  # Corrected ID: 'search-mode-store'
     State("last-searched-query-store", "data"),
     prevent_initial_call=True  # Prevents the callback from firing on app load
+    # running=[(Output("custom-search-output", "children"), html.Div(
+    #     dbc.Alert(f"Getting country news from our system",
+    #               color="success", className="mt-3"),
+    #     style={'text-align': 'center'}
+    # ), html.Div())]
 )
 def top_news_in_country(selected_country_value, current_search_mode, last_searched_query):
     # Ensure current_search_mode is not None (e.g., during very initial load if store hasn't populated)
@@ -895,7 +1031,12 @@ def top_news_in_country(selected_country_value, current_search_mode, last_search
     Input('time-dropdown', 'value'),
     Input('category-dropdown', 'value'),
     State("country-dropdown", "value"),
-    prevent_initial_call=True
+    prevent_initial_call=True,
+    running=[(Output("custom-search-output", "children"), html.Div(
+        dbc.Alert(f"Filtering by selected criteria",
+                  color="success", className="mt-3"),
+        style={'text-align': 'center'}
+    ), html.Div())]
 )
 def time_and_cat_sort(selected_time_value, selected_category_value, selected_country):
     # This callback should ONLY run when in 'default' search mode
@@ -931,12 +1072,13 @@ def time_and_cat_sort(selected_time_value, selected_category_value, selected_cou
 
     # Dummy Data for Pie Chart
     pie_chart = data['pie_chart']
-    total = 0
-    pie_data = [pie_chart['good'], pie_chart['okay'], pie_chart['bad']]
-    for i in pie_data:
-        total += i
-    pie_data = [x / total * 100 for x in pie_data]
-    pie_data = [int(round(x)) for x in pie_data]
+    pie_data = [
+        pie_chart.get('good', 0),
+        pie_chart.get('okay', 0),
+        pie_chart.get('bad', 0)
+    ]
+    total = sum(pie_data) or 1  # Avoid division by zero
+    pie_data = [int(round(x / total * 100)) for x in pie_data]
     df_pie = pd.DataFrame({
         "Sentiment": ["Positive", "Neutral", "Negative"],
         "Count": pie_data
@@ -988,39 +1130,39 @@ def time_and_cat_sort(selected_time_value, selected_category_value, selected_cou
     )
 
 
-@asynccontextmanager
-async def lifespan(app: WsgiToAsgi) -> AsyncGenerator[None, None]:
-    """
-    Manage the startup and shutdown of the scheduler alongside the ASGI app.
-    """
-    try:
-        await startup_function()  # Start the scheduler before the app
-        logger.info("Application startup completed")
-        yield
-    finally:
-        await shutdown_function()  # Shut down the scheduler after the app
-        logger.info("Application shutdown completed")
+# @asynccontextmanager
+# async def lifespan(app: WsgiToAsgi) -> AsyncGenerator[None, None]:
+#     """
+#     Manage the startup and shutdown of the scheduler alongside the ASGI app.
+#     """
+#     try:
+#         await startup_function()  # Start the scheduler before the app
+#         logger.info("Application startup completed")
+#         yield
+#     finally:
+#         await shutdown_function()  # Shut down the scheduler after the app
+#         logger.info("Application shutdown completed")
 
 
-def get_lifespan():
-    """Return the lifespan context manager for Uvicorn."""
-    return lifespan(asgi_app)
+# def get_lifespan():
+#     """Return the lifespan context manager for Uvicorn."""
+#     return lifespan(asgi_app)
 
 
-async def main():
-    config = uvicorn.Config(asgi_app, host="0.0.0.0", port=8000)
-    server = uvicorn.Server(config)
-    try:
-        await startup_function()  # Run startup tasks
-        logger.info("Application startup completed")
-        await server.serve()      # Start the server
-    finally:
-        await shutdown_function()  # Ensure shutdown tasks run
-        logger.info("Application shutdown completed")
+# async def main():
+#     config = uvicorn.Config(asgi_app, host="0.0.0.0", port=8000)
+#     server = uvicorn.Server(config)
+#     try:
+#         await startup_function()  # Run startup tasks
+#         logger.info("Application startup completed")
+#         await server.serve()      # Start the server
+#     finally:
+#         await shutdown_function()  # Ensure shutdown tasks run
+#         logger.info("Application shutdown completed")
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        app.run(port="8000", debug=True)
     except Exception as e:
         pass
     # uvicorn.run(
