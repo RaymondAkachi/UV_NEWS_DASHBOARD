@@ -120,7 +120,7 @@ The project follows a modular architecture:
 
 1.  **Clone the Repository**:
     ```bash
-    git clone [https://github.com/your-username/uv-news-dashboard.git](https://github.com/your-username/uv-news-dashboard.git)
+    git clone https://github.com/RaymondAkachi/uv-news-dashboard.git
     cd uv-news-dashboard
     ```
 
