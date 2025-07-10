@@ -239,7 +239,7 @@ app.layout = dbc.Container([
 
     dcc.Location(id='url', refresh=False),
     # dcc.Store(id='redis-data-store', storage_type='memory'),
-    dcc.Interval(id='interval-component', interval=600 *
+    dcc.Interval(id='interval-component', interval=3600 *
                  1000, n_intervals=0),  # 1 hr
 
 
@@ -337,7 +337,8 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col(
             dbc.Card([
-                dbc.CardHeader("Sentiment Trend Over Time", className="h5"),
+                dbc.CardHeader(
+                    "Sentiment Trend Over Time: WAT(GMT + 1)", className="h5"),
                 dbc.CardBody(
                     # dcc.Graph(id='sentiment-line-graph', figure=fig_line)
                     dcc.Graph(id='sentiment-line-graph')
@@ -364,7 +365,7 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col(
             dbc.Card([
-                dbc.CardHeader("Top Keywords & Sentiment", className="h5"),
+                dbc.CardHeader("Top News Outlets", className="h5"),
                 dbc.CardBody(
                     dash_table.DataTable(
                         id='keyword-table',
